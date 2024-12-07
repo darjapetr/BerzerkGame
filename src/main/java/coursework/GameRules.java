@@ -116,16 +116,16 @@ public class GameRules {
 
     private void handleInput() {
         if (activeKeys.contains(KeyCode.W)) {
-            player.moveUp(map);
+            player.moveUp(map, enemy1, enemy2, enemy3);
         }
         if (activeKeys.contains(KeyCode.S)) {
-            player.moveDown(map);
+            player.moveDown(map, enemy1, enemy2, enemy3);
         }
         if (activeKeys.contains(KeyCode.A)) {
-            player.moveLeft(map);
+            player.moveLeft(map, enemy1, enemy2, enemy3);
         }
         if (activeKeys.contains(KeyCode.D)) {
-            player.moveRight(map);
+            player.moveRight(map, enemy1, enemy2, enemy3);
         }
         if (activeKeys.contains(KeyCode.SPACE)) {
             Laser laser = new Laser(player.getX(), player.getY(), player.getDx(), player.getDy(), CELL_SIZE);

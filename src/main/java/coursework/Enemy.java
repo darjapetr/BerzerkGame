@@ -81,4 +81,8 @@ public class Enemy {
     public double getY() {
         return y;
     }
+
+    public int getCellSize() {
+        return cellSize;
+    }
 }

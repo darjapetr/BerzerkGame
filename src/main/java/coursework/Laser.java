@@ -14,9 +14,8 @@ public class Laser {
     public Laser(double startX, double startY, double directionX, double directionY, int cellSize) {
         this.x = (int) startX + cellSize / 2;
         this.y = (int) startY + cellSize / 2;
-        double length = Math.sqrt(directionX * directionX + directionY * directionY);
-        this.dx = (directionX / length) * speed;
-        this.dy = (directionY / length) * speed;
+        this.dx = directionX * speed;
+        this.dy = directionY * speed;
         this.active = true;
         this.cellSize = cellSize;
     }
@@ -56,17 +55,33 @@ public class Laser {
     }
 
     private boolean isPlayerHitByLaser(Laser laser, Player player) {
-        double dx = laser.getX() - player.getX();
-        double dy = laser.getY() - player.getY();
-        double distance = Math.sqrt(dx * dx + dy * dy);
-        return distance < cellSize;
+        double laserLeft = laser.getX() - size / 2;
+        double laserRight = laser.getX() + size / 2;
+        double laserTop = laser.getY() - size / 2;
+        double laserBottom = laser.getY() + size / 2;
+
+        double playerLeft = player.getX();
+        double playerRight = player.getX() + player.getCellSize();
+        double playerTop = player.getY();
+        double playerBottom = player.getY() + player.getCellSize();
+
+        return laserRight > playerLeft && laserLeft < playerRight &&
+                laserBottom > playerTop && laserTop < playerBottom;
     }
 
     private boolean isEnemyHitByLaser(Laser laser, Enemy enemy) {
-        double dx = laser.getX() - enemy.getX();
-        double dy = laser.getY() - enemy.getY();
-        double distance = Math.sqrt(dx * dx + dy * dy);
-        return distance < cellSize;
+        double laserLeft = laser.getX() - size / 2;
+        double laserRight = laser.getX() + size / 2;
+        double laserTop = laser.getY() - size / 2;
+        double laserBottom = laser.getY() + size / 2;
+
+        double enemyLeft = enemy.getX();
+        double enemyRight = enemy.getX() + enemy.getCellSize();
+        double enemyTop = enemy.getY();
+        double enemyBottom = enemy.getY() + enemy.getCellSize();
+
+        return laserRight > enemyLeft && laserLeft < enemyRight &&
+                laserBottom > enemyTop && laserTop < enemyBottom;
     }
 
     public void checkEnemyLaserHits(Laser laser, Player player) {

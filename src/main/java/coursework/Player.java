@@ -21,7 +21,7 @@ public class Player {
         this.isAlive = true;
     }
 
-    public void moveUp(Map map) {
+    public void moveUp(Map map, Enemy... enemies) {
         if (!isAlive) {
             return;
         }
@@ -34,11 +34,18 @@ public class Player {
         int rightCellX = (x + cellSize - 1) / cellSize;
 
         if (!map.isWall(topCellY, leftCellX) && !map.isWall(topCellY, rightCellX)) {
+            int oldY = y;
             y = newY;
+            for (Enemy enemy : enemies) {
+                if (isCollidingWithEnemy(enemy)) {
+                    y = oldY;
+                    return;
+                }
+            }
         }
     }
 
-    public void moveDown(Map map) {
+    public void moveDown(Map map, Enemy... enemies) {
         if (!isAlive) {
             return;
         }
@@ -51,11 +58,18 @@ public class Player {
         int rightCellX = (x + cellSize - 1) / cellSize;
 
         if (!map.isWall(bottomCellY, leftCellX) && !map.isWall(bottomCellY, rightCellX)) {
+            int oldY = y;
             y = newY;
+            for (Enemy enemy : enemies) {
+                if (isCollidingWithEnemy(enemy)) {
+                    y = oldY;
+                    return;
+                }
+            }
         }
     }
 
-    public void moveLeft(Map map) {
+    public void moveLeft(Map map, Enemy... enemies) {
         if (!isAlive) {
             return;
         }
@@ -68,11 +82,18 @@ public class Player {
         int bottomCellY = (y + cellSize - 1) / cellSize;
 
         if (!map.isWall(topCellY, leftCellX) && !map.isWall(bottomCellY, leftCellX)) {
+            int oldX = x;
             x = newX;
+            for (Enemy enemy : enemies) {
+                if (isCollidingWithEnemy(enemy)) {
+                    x = oldX;
+                    return;
+                }
+            }
         }
     }
 
-    public void moveRight(Map map) {
+    public void moveRight(Map map, Enemy... enemies) {
         if (!isAlive) {
             return;
         }
@@ -85,7 +106,14 @@ public class Player {
         int bottomCellY = (y + cellSize - 1) / cellSize;
 
         if (!map.isWall(topCellY, rightCellX) && !map.isWall(bottomCellY, rightCellX)) {
+            int oldX = x;
             x = newX;
+            for (Enemy enemy : enemies) {
+                if (isCollidingWithEnemy(enemy)) {
+                    x = oldX;
+                    return;
+                }
+            }
         }
     }
 
@@ -95,6 +123,21 @@ public class Player {
         }
         gc.setFill(Color.GREEN);
         gc.fillOval(x, y, cellSize, cellSize);
+    }
+
+    public boolean isCollidingWithEnemy(Enemy enemy) {
+        double playerLeft = x;
+        double playerRight = x + cellSize;
+        double playerTop = y;
+        double playerBottom = y + cellSize;
+
+        double enemyLeft = enemy.getX();
+        double enemyRight = enemy.getX() + enemy.getCellSize();
+        double enemyTop = enemy.getY();
+        double enemyBottom = enemy.getY() + enemy.getCellSize();
+
+        return playerRight > enemyLeft && playerLeft < enemyRight &&
+                playerBottom > enemyTop && playerTop < enemyBottom;
     }
 
     public boolean isAtExit(Map map) {
@@ -130,4 +173,7 @@ public class Player {
         return isAlive;
     }
 
+    public int getCellSize() {
+        return cellSize;
+    }
 }
