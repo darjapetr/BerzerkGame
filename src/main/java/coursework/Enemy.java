@@ -2,87 +2,43 @@ package coursework;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import java.util.List;
 
-public class Enemy {
-    private double x, y;
-    private double laserDirectionX;
-    private double laserDirectionY;
-    private int cellSize;
-    private Laser laser;
+public class Enemy extends GameCharacter{
+    private final double laserDirectionX;
+    private final double laserDirectionY;
     private long lastShotTime;
-    private long shotInterval = 1000;
-    private int lives;
-    private boolean isAlive;
+    private static final long SHOT_INTERVAL = 1000;
 
     public Enemy(double startX, double startY, double laserDirX, double laserDirY, int cellSize, int lives) {
-        this.x = startX;
-        this.y = startY;
+        super(startX, startY, cellSize, lives);
         this.laserDirectionX = laserDirX;
         this.laserDirectionY = laserDirY;
-        this.cellSize = cellSize;
-        this.lives = lives;
-        this.isAlive = true;
         this.lastShotTime = System.currentTimeMillis();
     }
 
-    public void update(Map map) {
-        if (!isAlive) {
-            return;
-        }
-
+    public boolean isReadyToFire() {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastShotTime >= shotInterval) {
-            fireLaser();
+        if (currentTime - lastShotTime >= SHOT_INTERVAL) {
             lastShotTime = currentTime;
+            return true;
         }
-
-        if (laser != null && laser.isActive()) {
-            laser.update(map);
-        }
+        return false;
     }
 
-    private void fireLaser() {
-        laser = new Laser(x, y, laserDirectionX, laserDirectionY, cellSize);
-    }
-
+    @Override
     public void render(GraphicsContext gc) {
         if (!isAlive) {
             return;
         }
-
         gc.setFill(Color.RED);
         gc.fillRect(x, y, cellSize, cellSize);
-
-        if (laser != null && laser.isActive()) {
-            laser.render(gc);
-        }
     }
 
-    public void loseLife() {
-        lives--;
-        if (lives <= 0) {
-            isAlive = false;
-        }
+    public double getLaserDirectionX() {
+        return laserDirectionX;
     }
 
-    public boolean isAlive() {
-        return isAlive;
-    }
-
-    public Laser getLaser() {
-        return laser;
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public int getCellSize() {
-        return cellSize;
+    public double getLaserDirectionY() {
+        return laserDirectionY;
     }
 }
